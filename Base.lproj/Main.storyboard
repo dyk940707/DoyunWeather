@@ -44,15 +44,15 @@
                                     <constraint firstItem="w75-fC-yzA" firstAttribute="top" secondItem="Jtr-zr-YUx" secondAttribute="top" id="Uu2-bD-8ca"/>
                                 </constraints>
                             </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="X9x-ZA-ijI">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="X9x-ZA-ijI">
                                 <rect key="frame" x="0.0" y="80" width="375" height="587"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="180" id="t2j-Kl-34l">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="SummaryTableViewCell" rowHeight="180" id="t2j-Kl-34l" customClass="SummaryTableViewCell" customModule="DoyunWeather" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="180"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="t2j-Kl-34l" id="WuF-dE-CYd">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="179.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="180"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1G9-yI-DhQ">
@@ -97,12 +97,18 @@
                                                 <constraint firstAttribute="bottomMargin" secondItem="kBo-8g-0y5" secondAttribute="bottom" id="stI-9c-tHk"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="currentTemperatureLabel" destination="kBo-8g-0y5" id="wcH-r2-wqH"/>
+                                            <outlet property="minMaxLabel" destination="v7o-xs-gSq" id="7f5-e8-a5J"/>
+                                            <outlet property="statusLabel" destination="UL4-Lp-usC" id="KMe-jb-GzA"/>
+                                            <outlet property="weatherImageView" destination="1G9-yI-DhQ" id="L5T-eC-1Da"/>
+                                        </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="80" id="0Fc-8x-8aA">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="ForecastTableViewCell" rowHeight="80" id="0Fc-8x-8aA" customClass="ForecastTableViewCell" customModule="DoyunWeather" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="208" width="375" height="80"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="0Fc-8x-8aA" id="Mhp-s0-BAv">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="79.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="80"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KTQ-GU-dIy">
@@ -153,6 +159,13 @@
                                                 <constraint firstItem="KTQ-GU-dIy" firstAttribute="trailing" secondItem="Mhp-s0-BAv" secondAttribute="trailingMargin" id="wR6-Jm-tr6"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="dateLabel" destination="CLt-rM-2Uh" id="ZXm-1r-fhe"/>
+                                            <outlet property="statusLabel" destination="bHx-Hn-R2d" id="IDH-D0-0Bc"/>
+                                            <outlet property="temperatureLabel" destination="KTQ-GU-dIy" id="bpx-qn-lVr"/>
+                                            <outlet property="timeLabel" destination="TFb-mZ-PmB" id="U7A-FY-dJW"/>
+                                            <outlet property="weatherImageView" destination="29R-bT-JeU" id="0pV-P4-EVV"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
