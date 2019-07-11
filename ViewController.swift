@@ -27,6 +27,11 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        listTableView.backgroundColor = UIColor.clear
+        listTableView.separatorStyle = .none
+        listTableView.showsVerticalScrollIndicator = false
+        
+        
         WeatherDataSource.shared.fetchSummary(lat: 37.498206, lon: 127.02761) {
             [weak self] in
             self?.listTableView.reloadData() //파싱이 완료되면 테이블 뷰를 리로딩
@@ -38,6 +43,20 @@ class ViewController: UIViewController {
     }
 
 }
+    var topInset: CGFloat = 0.0
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        if topInset == 0.0 {
+            let first = IndexPath(row: 0, section: 0)
+            if let cell = listTableView.cellForRow(at: first) {
+                topInset = listTableView.frame.height - cell.frame.height
+                listTableView.contentInset = UIEdgeInsets(top: topInset, left: 0, bottom: 0, right: 0)
+    
+            }
+            
+        }
+    }
     
 }
 extension ViewController: UITableViewDataSource {
