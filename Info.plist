@@ -55,5 +55,7 @@
 			<false/>
 		</dict>
 	</dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>사용자의 현재위치를 파악합니다.</string>
 </dict>
 </plist>

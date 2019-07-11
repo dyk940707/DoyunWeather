@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreLocation
 
 struct WeatherSummary: Codable {
     struct Weather: Codable {
@@ -175,12 +176,35 @@ class WeatherDataSource {
     private init() {}
     
     var summary: WeatherSummary? // 현재날씨 데이터 저장
-    
     var forecastList = [ForecastData]() //예보 데이터를 배열로 저장
     
+    let group = DispatchGroup()
+    let workQueue = DispatchQueue(label: "apiQueue", attributes: .concurrent)
+    
+    func fetch(location: CLLocation, completion: @escaping () -> ()) {
+        group.enter()
+        workQueue.async {
+            self.fetchSummary(lat: location.coordinate.latitude, lon: location.coordinate.longitude, completion: {
+                self.group.leave()
+            })
+        }
+        
+        group.enter()
+        workQueue.async {
+            self.fetchForecast(lat: location.coordinate.latitude, lon: location.coordinate.longitude, completion: {
+                self.group.leave()
+            })
+        }
+        
+        group.notify(queue: DispatchQueue.main) {
+            completion()
+        }
+    }
     //현재날씨를 가져와서 파싱하는 메소드
     //파라미터로 두 좌표 전달
     //완료후에 실행할 코드
+    
+    
     func fetchSummary(lat: Double, lon: Double, completion: @escaping () -> ()) {
         //컴플리션으로 전달된 클로저를 호출
 

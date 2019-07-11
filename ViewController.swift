@@ -7,9 +7,29 @@
 //
 
 import UIKit
+import CoreLocation
+
+extension UIViewController {
+    func show(message: String) {
+        let alert = UIAlertController(title: "알림", message: message, preferredStyle: .alert)
+        
+        let ok = UIAlertAction(title: "확인", style: .default, handler: nil)
+        alert.addAction(ok)
+        
+        present(alert, animated: true, completion: nil)
+    }
+}
 
 class ViewController: UIViewController {
-
+    
+    @IBOutlet weak var locationLabel: UILabel!
+    
+    lazy var locationManager: CLLocationManager = {
+        let m = CLLocationManager()
+        m.delegate = self
+        return m
+    }()
+    
     let tempFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.minimumFractionDigits = 0
@@ -23,26 +43,35 @@ class ViewController: UIViewController {
         
         return formatter
     }()
+    
     @IBOutlet weak var listTableView: UITableView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         listTableView.backgroundColor = UIColor.clear
         listTableView.separatorStyle = .none
         listTableView.showsVerticalScrollIndicator = false
-        
-        
-        WeatherDataSource.shared.fetchSummary(lat: 37.498206, lon: 127.02761) {
-            [weak self] in
-            self?.listTableView.reloadData() //파싱이 완료되면 테이블 뷰를 리로딩
-        
-        WeatherDataSource.shared.fetchForecast(lat: 37.498206, lon:127.02761) {
-            [weak self] in
-            self?.listTableView.reloadData()
-        }
-    }
 
 }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        locationLabel.text = "업데이트 중..."
+        
+        if CLLocationManager.locationServicesEnabled() {
+            switch CLLocationManager.authorizationStatus(){
+            case .notDetermined:
+                locationManager.requestWhenInUseAuthorization()
+            case .authorizedWhenInUse, .authorizedAlways: updateCurrentLocation()
+            case .denied, .restricted:
+                show(message: "위치 서비스 사용 불가")
+            }
+        } else {
+            show(message: "위치 서비스 사용 불가")
+        }
+    }
+    
     var topInset: CGFloat = 0.0
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -59,6 +88,51 @@ class ViewController: UIViewController {
     }
     
 }
+extension ViewController: CLLocationManagerDelegate {
+    func updateCurrentLocation() {
+        locationManager.startUpdatingLocation()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let loc = locations.first {
+            print(loc.coordinate)
+            
+            //Geocoding이란? 특정위치에 대한 고유한명칭을 사용하여 좌표를 얻는 것
+            //ex)주소를 좌표로 바꾸는 것
+            //Reverse Geocoding : 좌표를 주소로 바꾸는 것
+            let decoder = CLGeocoder()
+            decoder.reverseGeocodeLocation(loc) { [weak self] (placemarks, error) in
+                if let place = placemarks?.first {
+                    if let gu = place.locality, let dong = place.subLocality {
+                        self?.locationLabel.text = "\(gu) \(dong)"
+                    } else {
+                        self?.locationLabel.text = place.name
+                    }
+                }
+            }
+            
+            WeatherDataSource.shared.fetch(location: loc) {
+                self.listTableView.reloadData()
+            }
+        }
+        manager.stopUpdatingLocation()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        show(message: error.localizedDescription)
+        manager.stopUpdatingLocation()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        switch status {
+        case .authorizedWhenInUse, .authorizedAlways:
+            updateCurrentLocation()
+        default:
+            break
+        }
+    }
+}
+
 extension ViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2 // 테이블뷰에 2개의 섹션 표시
