@@ -13,7 +13,7 @@ class ViewController: UIViewController {
     let tempFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.minimumFractionDigits = 0
-        formatter.maximumFractionDigits = 0
+        formatter.maximumFractionDigits = 1
         
         return formatter
     }()
@@ -82,8 +82,19 @@ extension ViewController: UITableViewDataSource {
             if let data = WeatherDataSource.shared.summary?.weather.minutely.first {
                 cell.weatherImageView.image = UIImage(named: data.sky.code)
                 cell.statusLabel.text = data.sky.name
-                cell.minMaxLabel.text = "최대 \(data.temperature.tmax)º 최소 \(data.temperature.tmin)º"
-                cell.currentTemperatureLabel.text = "\(data.temperature.tc)º"
+                
+                let max = Double(data.temperature.tmax) ?? 0.0
+                let min = Double(data.temperature.tmin) ?? 0.0
+                
+                let maxStr = tempFormatter.string(for: max) ?? "-"
+                let minStr = tempFormatter.string(for: min) ?? "-"
+                
+                cell.minMaxLabel.text = "최대 \(maxStr)º 최소 \(minStr)º"
+
+                let current = Double(data.temperature.tc) ?? 0.0
+                let currentStr = tempFormatter.string(for: current) ?? "-"
+                
+                cell.currentTemperatureLabel.text = "\(currentStr)º"
             }
         return cell
     }
